@@ -12,9 +12,13 @@ endif()
 
 option(PLIB_ENABLE_TESTS "Enable building tests" ${is_root_project})
 
+add_library(plib INTERFACE)
+target_include_directories(plib INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/include")
+
+if ("${CMAKE_BUILD_TYPE}" MATCHES "(Debug)|(RelWithDebInfo)")
+  target_compile_definitions(plib INTERFACE PLIB_DEBUG=1)
+endif()
+
 if(PLIB_ENABLE_TESTS)
   add_subdirectory(tests)
 endif()
-
-add_library(plib INTERFACE)
-target_include_directories(plib INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/include")
