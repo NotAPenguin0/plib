@@ -17,3 +17,4 @@
 - [ ] command-line interpreter tool
 - [ ] debugger
 - [ ] move test suite to full programs loaded from files instead of small snippets
+- [ ] move pscript out of plib repository

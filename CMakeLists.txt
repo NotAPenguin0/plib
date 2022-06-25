@@ -15,47 +15,13 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 endif()
 
 option(PLIB_ENABLE_TESTS "Enable building tests" ${is_root_project})
-option(PLIB_BUILD_PSCRIPT_DEMO_APP "Enable pscript demo app" ON) # TODO: set default to off
 
 if(PLIB_ENABLE_TESTS)
   add_subdirectory(tests)
 endif()
 
-FetchContent_Declare(
-  peglib
-  GIT_REPOSITORY https://github.com/NotAPenguin0/cpp-peglib
-)
-FetchContent_MakeAvailable(peglib)
 
-FetchContent_Declare(
-        fmt
-        GIT_REPOSITORY https://github.com/fmtlib/fmt
-)
-FetchContent_MakeAvailable(fmt)
 
-# TODO: Add option to exclude pscript
-
-add_library(plib STATIC)
-target_sources(plib PRIVATE
-        src/pscript/context.cpp
-        src/pscript/memory.cpp
-        src/pscript/value.cpp
-        src/pscript/variable.cpp
-        src/pscript/script.cpp
-)
-target_include_directories(plib PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" ${peglib_SOURCE_DIR})
-
-target_link_libraries(plib PUBLIC fmt)
-target_include_directories(plib PRIVATE ${fmt_SOURCE_DIR}/include)
-
-target_compile_options(plib PRIVATE "-Wno-format")
-
-# copy over modules to build directory
-file(GLOB_RECURSE MODULE_FILES "modules/*")
-add_custom_command(
-        TARGET plib POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/modules/" ${${CMAKE_PROJECT_NAME}_BINARY_DIR}/pscript-modules
-        DEPENDS ${MODULE_FILES}
-        COMMENT "Copying plib modules"
-        VERBATIM
-)
+add_library(plib INTERFACE)
+# target_sources(plib PRIVATE)
+target_include_directories(plib INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/include")
